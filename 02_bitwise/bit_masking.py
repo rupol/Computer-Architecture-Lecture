@@ -1,4 +1,4 @@
-instruction = 0b10011010
+instruction = 0b10110010
 
 # shifting by 6 should leave us with first two values
 shifted = instruction >> 6
@@ -12,3 +12,9 @@ print(bin(shifted))  # 0b10011
 # apply mask
 mask = 0b00000011 & shifted
 print(bin(mask))
+
+middle_two = (instruction >> 3) & 0b00000011
+print(bin(middle_two))
+
+b = (instruction >> 5) & 0b00000001
+print(bin(b))

@@ -9,10 +9,13 @@ PRINT_NUM = 3   # 0b00000011
 SAVE_REG = 4   # 0b00000100
 PRINT_REG = 5   # 0b00000101
 ADD = 6    # 0b00000110
+PUSH = 7
+POP = 8
 
 memory = [0] * 256
 
 registers = [0] * 8
+SP = 7
 
 running = True
 
@@ -48,6 +51,8 @@ def load_memory(filename):
 
 
 load_memory(sys.argv[1])
+# set the top of the stack correctly
+registers[SP] = len(memory)
 
 while running:
     # read line by line from memory
@@ -95,6 +100,26 @@ while running:
         running = False
         pc += 1
         # could have also returned
+        print(memory[-20:])
+        print(registers)
+
+    elif instruction == PUSH:
+        given_register = memory[pc + 1]
+        value_in_register = registers[given_register]
+        # decrement the Stack Pointer
+        registers[SP] -= 1
+        # write the value of the given register to memory AT the SP location
+        memory[registers[SP]] = value_in_register
+        pc += 2
+
+    elif instruction == POP:
+        given_register = memory[pc + 1]
+        # write the value in memory at the top of stack to the given register
+        value_from_memory = memory[registers[SP]]
+        registers[given_register] = value_from_memory
+        # increment the Stack Pointer
+        registers[SP] += 1
+        pc += 2
 
     else:
         print(f'Unknown instruction {instruction}')
